@@ -10,33 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Alertas PC">
 <meta name="description" content="Generador de Alertas Tempranas — Protección Civil Santa Cruz">
 <title>Alertas Tempranas — PC Santa Cruz</title>
-<script>
-// PWA Manifest inline — no requiere archivo externo
-(function(){
-  const manifest = {
-    name: "Generador de Alertas — PC Santa Cruz",
-    short_name: "Alertas PC",
-    description: "Generador de Alertas Tempranas de Protección Civil Santa Cruz",
-    start_url: "https://ricky45684.github.io/alertas-pc-santacruz/",
-    scope: "https://ricky45684.github.io/alertas-pc-santacruz/",
-    display: "standalone",
-    orientation: "portrait-primary",
-    background_color: "#0a0e1a",
-    theme_color: "#0d1117",
-    lang: "es",
-    icons: [
-      { src: "https://ricky45684.github.io/alertas-pc-santacruz/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
-      { src: "https://ricky45684.github.io/alertas-pc-santacruz/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
-    ]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('link');
-  link.rel = 'manifest';
-  link.href = url;
-  document.head.appendChild(link);
-})();
-</script>
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@600;700;800&family=Roboto+Condensed:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
