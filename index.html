@@ -6,11 +6,7 @@
 <meta name="theme-color" content="#0d1117">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Alertas PC">
-<meta name="description" content="Generador de Alertas Tempranas — Protección Civil Santa Cruz">
-<title>Alertas Tempranas — PC Santa Cruz</title>
-<link rel="manifest" href="manifest.json">
+<title>Alertas Tempranas -- PC Santa Cruz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@600;700;800&family=Roboto+Condensed:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -525,9 +521,9 @@ function render() {
 
   // Resumen
   if(resumen){
-    ctx.font='20px "Roboto Condensed",sans-serif';
+    ctx.font='24px "Roboto Condensed",sans-serif';
     const resLines=measureWrap(ctx,resumen,colR.w-28);
-    const resH=44+resLines*27+12;
+    const resH=44+resLines*31+12;
     ctx.fillStyle='rgba(8,14,32,0.60)'; roundRect(ctx,colR.x,ry,colR.w,resH,8); ctx.fill();
     shadow(ctx,'rgba(0,0,0,0.7)',4);
     ctx.font='700 18px "Roboto Condensed",sans-serif'; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillStyle='#f1f5f9';
@@ -535,8 +531,8 @@ function render() {
     ctx.strokeStyle=nivelColor+'88'; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(colR.x+14,ry+32); ctx.lineTo(colR.x+colR.w-14,ry+32); ctx.stroke();
     noShadow(ctx);
-    ctx.font='20px "Roboto Condensed",sans-serif'; ctx.fillStyle='#e2e8f0'; ctx.textBaseline='top';
-    wrapText(ctx,resumen,colR.x+14,ry+38,colR.w-28,27);
+    ctx.font='24px "Roboto Condensed",sans-serif'; ctx.fillStyle='#e2e8f0'; ctx.textBaseline='top';
+    wrapText(ctx,resumen,colR.x+14,ry+38,colR.w-28,31);
     ry+=resH+18;
   }
 
