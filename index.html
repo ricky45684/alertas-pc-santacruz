@@ -158,6 +158,7 @@ canvas{width:100%;max-width:600px;display:block;border-radius:8px;box-shadow:0 8
   </div>
   <button class="bgen" onclick="render()">ACTUALIZAR VISTA PREVIA</button>
   <button class="bsmn" onclick="window.open('https://www.smn.gob.ar/alertas','_blank','width=1200,height=800,scrollbars=yes,resizable=yes')">ABRIR SMN -- ALERTAS TEMPRANAS</button>
+  <button class="bsmn" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)" onclick="window.location.href='multinivel.html'">MODO MULTINIVEL (2 ALERTAS)</button>
 </div>
 <div class="prev">
   <h2>VISTA PREVIA -- 1080 x 1080 px</h2>
@@ -213,24 +214,24 @@ const NOMBRE_SMN = {
 
 const RECS = {
   viento:{
-    amarillo:['Evita salir.','Retira objetos que puedan ser arrastrados (macetas, sillas, toldos).','Cerra puertas y ventanas.','No te refugies bajo marquesinas, carteles o arboles.','Precaucion al conducir.'],
-    naranja: ['Evita salir salvo emergencias.','Asegura objetos del exterior.','Alejate de arboles y estructuras debiles.','No cruces puentes ni zonas expuestas.','Conduccion muy peligrosa, evitala.'],
-    rojo:    ['Quedate en casa.','No salgas bajo ningun concepto.','Alejate de ventanas y paredes externas.','Segui instrucciones de Proteccion Civil.','Llama al 103 ante emergencias.']
+    amarillo: ['Evita salir.','Retira o asegura objetos que puedan ser arrastrados por el viento, como macetas, sillas o toldos.','Cerra y alejate de puertas y ventanas.','No te refugies debajo de marquesinas, carteles publicitarios, arboles o postes.','Tene precaucion al conducir.'],
+    naranja: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es necesario.','Retira objetos que puedan ser arrastrados por el viento, como macetas, sillas o toldos.','Cerra y alejate de puertas y ventanas.','No te refugies debajo de marquesinas, carteles publicitarios, arboles o postes.','Con rafagas intensas o reduccion de visibilidad por tierra, busca un lugar seguro para detenerte.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
+    rojo: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','No salgas y quedate en el interior de un lugar seguro.','Alejate de carteles publicitarios, arboles o postes.','Retira objetos que puedan ser arrastrados por el viento, como macetas, sillas o toldos.','Cerra y alejate de puertas y ventanas.','Con rafagas intensas o reduccion de visibilidad por tierra, busca un lugar seguro para detenerte.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Ubica las zonas seguras e identifica lugares a donde ir en caso de evacuacion.','Comparti estas recomendaciones con tu familia: asegurate de que todos sepan que hacer en caso de emergencia.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
   },
   lluvia:{
-    amarillo:['Evita circular por zonas inundables.','No cruces cauces de agua.','Precaucion al conducir.','Mantene limpios los desagues.','Segui los pronosticos oficiales.'],
-    naranja: ['Evita zonas bajas y cursos de agua.','No intentes cruzar calles inundadas.','Alejate de rios y arroyos.','Guarda vehiculos en lugares seguros.','Evacua si te lo indican.'],
-    rojo:    ['Evacua la zona si te lo indican.','No ingreses a zonas inundadas.','Llama al 103 ante emergencias.','Segui instrucciones de Proteccion Civil.','No subestimes la fuerza del agua.']
+    amarillo: ['Evita salir.','No saques la basura.','Limpia desagues y sumideros.','Alejate de zonas inundables.','Corta el suministro electrico si ingresa agua.'],
+    naranja: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es necesario.','No saques la basura.','Limpia desagues y sumideros.','Alejate de zonas inundables y no ingreses en calles anegadas.','Conduci con precaucion.','Corta el suministro electrico si ingresa agua.','No te acerques a cables, postes o carteles con electricidad.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
+    rojo: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es imprescindible.','No saques la basura.','Limpia desagues y sumideros.','Alejate de rios, arroyos, zonas inundables y no ingreses en calles anegadas.','Evita conducir en calzadas resbaladizas y con visibilidad reducida.','Corta el suministro electrico si ingresa agua.','Ubica las zonas seguras e identifica lugares a donde ir en caso de evacuacion.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Comparti estas recomendaciones con tu familia: asegurate de que todos sepan que hacer en caso de emergencia.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
   },
   nevada:{
-    amarillo:['Conduci con precaucion, usa cadenas.','Abrigate adecuadamente.','Acumula viveres y agua potable.','Revisa calefaccion y gas.','Segui informacion oficial.'],
-    naranja: ['Evita viajes innecesarios.','Usa cadenas o cubrenieves.','Abriga canherias para evitar roturas.','Mantene viveres para varios dias.','Tene linterna y abrigo a mano.'],
-    rojo:    ['No salgas salvo emergencias.','Llama al 103 si necesitas ayuda.','Segui instrucciones de Proteccion Civil.','Abriga animales y plantas.','Tene medicamentos esenciales a mano.']
+    amarillo: ['Evita salir.','Circula con vehiculos adecuados y preparados para hielo y nieve. Lleva siempre una pala.','Revisa el estado de los techos, canaletas y desagues para asegurarte de que puedan soportar la acumulacion de nieve.','Ventila para evitar acumulacion de monoxido de carbono.','Asegurate de tener suficientes alimentos no perecederos y agua potable para al menos tres dias. Inclui alimentos faciles de preparar ante cortes de energia.','Prepara un kit de emergencia que incluya linternas, pilas, velas, fosforos, mantas termicas, botiquin de primeros auxilios y medicamentos necesarios.'],
+    naranja: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es imprescindible.','Circula solo con vehiculos adecuados y preparados para hielo y nieve. Lleva siempre una pala.','Revisa techos, canaletas y desagues y retira la nieve acumulada.','Ventila para evitar acumulacion de monoxido de carbono.','Asegurate de tener alimentos no perecederos, agua potable para al menos tres dias y carga en el celular.','Prepara un kit de emergencia con linternas, pilas, velas, fosforos, mantas termicas, botiquin y medicamentos necesarios.','Comparti estas recomendaciones con tu familia: asegurate de que todos sepan que hacer en caso de emergencia.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
+    rojo: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es imprescindible.','Circula solo con vehiculos adecuados y preparados para hielo y nieve. Lleva siempre una pala.','Revisa techos, canaletas y desagues y retira la nieve acumulada.','Ventila para evitar acumulacion de monoxido de carbono.','Asegurate de tener alimentos no perecederos, agua potable para al menos tres dias y carga en el celular.','Prepara un kit de emergencia con linternas, pilas, velas, fosforos, mantas termicas, botiquin y medicamentos necesarios.','Comparti estas recomendaciones con tu familia: asegurate de que todos sepan que hacer en caso de emergencia.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
   },
   tormenta:{
-    amarillo:['Busca refugio ante relampagos.','Alejate de arboles y postes.','Guarda vehiculos y maquinaria.','Evita lugares abiertos.','Cerra puertas y ventanas.'],
-    naranja: ['Quedate bajo techo.','Desconecta aparatos electricos.','Alejate de rejas y estructuras metalicas.','No te refugies bajo arboles.','Evita usar el telefono fijo.'],
-    rojo:    ['No salgas.','Desconecta todos los aparatos electricos.','Llama al 103 ante emergencias.','Alejate de ventanas.','Segui instrucciones de Proteccion Civil.']
+    amarillo: ['Evita salir.','No saques la basura y limpia desagues y sumideros.','Desconecta los electrodomesticos y corta el suministro electrico si ingresa agua.','Cerra y alejate de puertas y ventanas.','Retira o asegura objetos que puedan ser arrastrados por el viento.','Si estas al aire libre, busca refugio inmediato en un edificio, casa o vehiculo cerrado.'],
+    naranja: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es necesario.','Permanece en construcciones cerradas como casas, escuelas, edificios publicos.','Desconecta los electrodomesticos y corta el suministro electrico si ingresa agua.','Cerra y alejate de puertas y ventanas.','Alejate de zonas inundables y no ingreses en calles anegadas.','Retira o asegura objetos que puedan ser volados por el viento.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
+    rojo: ['Segui las instrucciones de las autoridades locales. La calma es fundamental en estas situaciones.','Sali solo si es imprescindible.','Desconecta los electrodomesticos y corta el suministro electrico si ingresa agua.','Cerra y alejate de puertas y ventanas.','Alejate de zonas inundables y no ingreses en calles anegadas.','Retira o asegura objetos que puedan ser arrastrados por el viento.','Prepara un kit de emergencia con agua potable, alimentos, botiquin de primeros auxilios, radio a pilas y linterna. Carga los celulares con anticipacion.','Ubica las zonas seguras e identifica lugares a donde ir en caso de evacuacion.','Comparti estas recomendaciones con tu familia: asegurate de que todos sepan que hacer en caso de emergencia.','Agenda los numeros locales de Proteccion Civil, Bomberos y Policia.'],
   },
   frio:{
     amarillo:['Abrigate con varias capas de ropa.','Protege a adultos mayores y ninos.','Revisa calefaccion y ventilacion.','Evita la exposicion prolongada al frio.','Tene medicamentos esenciales a mano.'],
@@ -536,16 +537,40 @@ function render() {
     ry+=resH+18;
   }
 
-  // Recomendaciones
+  // Recomendaciones (texto oficial SMN) -- con word-wrap y auto-fit
   if(recs.length>0){
-    const recH=38+recs.length*30+10;
+    const footTop=H-110;
+    const locsCount=getLocs().length;
+    const locReserve=locsCount>0 ? (38+locsCount*30+10+14) : 0; // espacio que ocupara Ubicacion
+    const avail=footTop-12-ry-50-locReserve;
+    const maxColW=colR.w-28;
+    let fs=18, lineH=23, totalLines=0;
+    for(fs=18; fs>=13; fs--){
+      lineH=Math.round(fs*1.28);
+      ctx.font=fs+'px "Roboto Condensed",sans-serif';
+      totalLines=0;
+      recs.forEach((r,i)=>{
+        const numW=ctx.measureText((i+1)+'- ').width;
+        totalLines+=measureWrap(ctx, r, maxColW-numW-4);
+      });
+      if(totalLines*lineH<=avail) break;
+    }
+    if(fs<13){ fs=13; lineH=Math.round(13*1.28); ctx.font=fs+'px "Roboto Condensed",sans-serif';
+      totalLines=0; recs.forEach((r,i)=>{ const numW=ctx.measureText((i+1)+'- ').width; totalLines+=measureWrap(ctx,r,maxColW-numW-4); }); }
+    const recH=38+totalLines*lineH+12;
     ctx.fillStyle='rgba(8,14,32,0.60)'; roundRect(ctx,colR.x,ry,colR.w,recH,8); ctx.fill();
     shadow(ctx,'rgba(0,0,0,0.7)',4);
     ctx.font='700 17px "Roboto Condensed",sans-serif'; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillStyle='#94a3b8';
     ctx.fillText('Recomendaciones:', colR.x+14, ry+10);
     noShadow(ctx);
-    ctx.font='20px "Roboto Condensed",sans-serif'; ctx.fillStyle='#f1f5f9';
-    recs.forEach((r,i)=>{ ctx.fillText((i+1)+'- '+r, colR.x+14, ry+30+i*30); });
+    ctx.font=fs+'px "Roboto Condensed",sans-serif'; ctx.fillStyle='#f1f5f9';
+    let ly=ry+34;
+    recs.forEach((r,i)=>{
+      const num=(i+1)+'- ';
+      ctx.fillText(num, colR.x+14, ly);
+      const numW=ctx.measureText(num).width;
+      ly=wrapText(ctx, r, colR.x+14+numW, ly, maxColW-numW-4, lineH);
+    });
     ry+=recH+18;
   }
 
