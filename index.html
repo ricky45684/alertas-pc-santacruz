@@ -55,7 +55,7 @@ textarea{resize:vertical;min-height:65px}
 .bgen:hover{background:linear-gradient(135deg,#fb923c,#f97316)}
 .bsmn{background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;color:#fff;border-radius:8px;padding:10px;font-size:.82rem;font-weight:700;font-family:Montserrat,sans-serif;letter-spacing:1px;cursor:pointer;width:100%;transition:all .15s}
 .bsmn:hover{opacity:.9}
-canvas{width:100%;max-width:600px;display:block;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.7)}
+canvas{width:100%;max-width:600px;display:block;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.7);cursor:pointer}
 .acts{display:flex;gap:8px;width:100%;max-width:600px}
 .ba{flex:1;border:none;border-radius:7px;padding:10px 8px;font-size:.76rem;font-weight:800;font-family:Anton,sans-serif;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;transition:all .15s}
 .bdl{background:#16a34a;color:#fff}.bdl:hover{background:#15803d}
@@ -93,13 +93,27 @@ canvas{width:100%;max-width:600px;display:block;border-radius:8px;box-shadow:0 8
     <input type="date" id="fEvento" oninput="render()">
   </div>
   <div class="field">
-    <label class="lbl">Periodos Afectados</label>
-    <div class="periodos">
-      <label><input type="checkbox" id="pM1" onchange="render()"> Manana (M)</label>
-      <label><input type="checkbox" id="pM2" onchange="render()"> Mediodia (M)</label>
-      <label><input type="checkbox" id="pT"  onchange="render()"> Tarde (T)</label>
-      <label><input type="checkbox" id="pN"  onchange="render()"> Noche (N)</label>
+    <label class="lbl">Periodos Afectados (tambien clickeable en la placa)</label>
+    <div style="font-size:.72rem;color:#9ca3af;margin-bottom:6px">En Frio Extremo el bloque M/M/T/N no se muestra en la placa; se usa solo la leyenda de duracion.</div>
+    <div class="periodos" id="periodosBox">
+      <label><input type="checkbox" id="pM1" checked onchange="render()"> Manana (M)</label>
+      <label><input type="checkbox" id="pM2" checked onchange="render()"> Mediodia (M)</label>
+      <label><input type="checkbox" id="pT"  checked onchange="render()"> Tarde (T)</label>
+      <label><input type="checkbox" id="pN"  checked onchange="render()"> Noche (N)</label>
     </div>
+  </div>
+  <div class="field">
+    <label class="lbl">Duracion de la Alerta</label>
+    <select id="duracion" onchange="onDuracionChange()">
+      <option value="">Sin leyenda de duracion</option>
+      <option value="12 HORAS">12 horas</option>
+      <option value="24 HORAS">24 horas</option>
+      <option value="36 HORAS">36 horas</option>
+      <option value="48 HORAS">48 horas</option>
+      <option value="72 HORAS">72 horas</option>
+      <option value="__custom">Personalizada...</option>
+    </select>
+    <input type="text" id="duracionCustom" placeholder="Ej: HASTA EL 22/07 A LAS 12 HS" oninput="render()" style="display:none;margin-top:6px">
   </div>
   <div class="field">
     <label class="lbl">Zonas Afectadas</label>
@@ -305,13 +319,52 @@ function getEmision() {
   const hh=String(dt.getHours()).padStart(2,'0'), mn=String(dt.getMinutes()).padStart(2,'0');
   return 'Pronostico oficial de Alertas y Advertencias del dia '+DIAS[dt.getDay()]+' '+dt.getDate()+' de '+MESES[dt.getMonth()]+' de '+dt.getFullYear()+' - generado a las '+hh+':'+mn+' h';
 }
+function esFrioExtremo() {
+  const t = document.getElementById('tipo');
+  return t && t.value === 'frio';
+}
 function getPeriodos() {
+  if(esFrioExtremo()) return [];
   const ps = [];
   if(document.getElementById('pM1').checked) ps.push('M');
   if(document.getElementById('pM2').checked) ps.push('M');
   if(document.getElementById('pT').checked)  ps.push('T');
   if(document.getElementById('pN').checked)  ps.push('N');
   return ps;
+}
+function onDuracionChange() {
+  const sel = document.getElementById('duracion');
+  const custom = document.getElementById('duracionCustom');
+  custom.style.display = sel.value === '__custom' ? 'block' : 'none';
+  render();
+}
+function getDuracion() {
+  const sel = document.getElementById('duracion');
+  if(!sel) return '';
+  if(sel.value === '__custom') {
+    return document.getElementById('duracionCustom').value.trim().toUpperCase();
+  }
+  return sel.value;
+}
+let periodBoxes = [];
+function setupPeriodClicks(canvasId, ids) {
+  const cnv = document.getElementById(canvasId);
+  if(cnv.dataset.clickBound) return;
+  cnv.dataset.clickBound = '1';
+  cnv.addEventListener('click', function(e){
+    const rect = cnv.getBoundingClientRect();
+    const scaleX = cnv.width/rect.width, scaleY = cnv.height/rect.height;
+    const cx = (e.clientX-rect.left)*scaleX, cy = (e.clientY-rect.top)*scaleY;
+    for(const box of periodBoxes) {
+      if(box.canvasId!==canvasId) continue;
+      if(cx>=box.x && cx<=box.x+box.w && cy>=box.y && cy<=box.y+box.h) {
+        const el = document.getElementById(box.id);
+        el.checked = !el.checked;
+        render();
+        return;
+      }
+    }
+  });
 }
 function getCurrentRecs() {
   const tipo = document.getElementById('tipo').value;
@@ -485,24 +538,43 @@ function render() {
   const mapTop=colL.y+(fechaEv?138:60), mapH=450;
   drawMapa(ctx,colL.x,mapTop,colL.w,mapH,getZonas(),nivelColor);
 
-  // PERIODOS M/M/T/N
-  const periodos=getPeriodos();
+  // PERIODOS M/M/T/N (clickeables en la placa) -- ocultos automaticamente en Frio Extremo
+  const usarPeriodos = !esFrioExtremo();
   const perTop=mapTop+mapH+10;
   const TODOS=['M','M','T','N'], IDS=['pM1','pM2','pT','pN'];
-  ctx.fillStyle='rgba(8,14,32,0.80)'; roundRect(ctx,colL.x,perTop,colL.w,60,8); ctx.fill();
-  const pw=(colL.w-20)/4-8, totalW=4*(pw+8)-8;
-  let px=colL.x+(colL.w-totalW)/2;
-  TODOS.forEach((p,i)=>{
-    const activo=document.getElementById(IDS[i]).checked;
-    if(activo){ctx.fillStyle=nivelColor+'33'; roundRect(ctx,px,perTop+6,pw,48,6); ctx.fill();}
-    ctx.strokeStyle=activo?nivelColor:'rgba(255,255,255,0.25)'; ctx.lineWidth=activo?2:1;
-    roundRect(ctx,px,perTop+6,pw,48,6); ctx.stroke();
-    shadow(ctx,'rgba(0,0,0,0.9)',5);
-    ctx.font='bold 36px Anton,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=activo?nivelColor:'rgba(255,255,255,0.35)';
-    ctx.fillText(p,px+pw/2,perTop+30);
-    noShadow(ctx); px+=pw+8;
-  });
+  periodBoxes = periodBoxes.filter(b=>b.canvasId!=='cnv');
+  let periodosBottom = perTop;
+  if(usarPeriodos){
+    ctx.fillStyle='rgba(8,14,32,0.80)'; roundRect(ctx,colL.x,perTop,colL.w,60,8); ctx.fill();
+    const pw=(colL.w-20)/4-8, totalW=4*(pw+8)-8;
+    let px=colL.x+(colL.w-totalW)/2;
+    TODOS.forEach((p,i)=>{
+      const activo=document.getElementById(IDS[i]).checked;
+      if(activo){ctx.fillStyle=nivelColor+'33'; roundRect(ctx,px,perTop+6,pw,48,6); ctx.fill();}
+      ctx.strokeStyle=activo?nivelColor:'rgba(255,255,255,0.25)'; ctx.lineWidth=activo?2:1;
+      roundRect(ctx,px,perTop+6,pw,48,6); ctx.stroke();
+      shadow(ctx,'rgba(0,0,0,0.9)',5);
+      ctx.font='bold 36px Anton,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=activo?nivelColor:'rgba(255,255,255,0.35)';
+      ctx.fillText(p,px+pw/2,perTop+30);
+      noShadow(ctx);
+      periodBoxes.push({canvasId:'cnv', id:IDS[i], x:px, y:perTop+6, w:pw, h:48});
+      px+=pw+8;
+    });
+    periodosBottom = perTop+60;
+  }
+
+  // LEYENDA DE DURACION (debajo de M/M/T/N, o en su lugar si el bloque esta desactivado)
+  const duracionTxt = getDuracion();
+  if(duracionTxt){
+    const durTop = usarPeriodos ? periodosBottom+10 : perTop;
+    ctx.fillStyle=nivelColor; roundRect(ctx,colL.x,durTop,colL.w,40,8); ctx.fill();
+    shadow(ctx,'rgba(0,0,0,0.8)',5);
+    ctx.font='800 20px Poppins,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle=nivel==='amarillo'?'#0d1117':'#fff';
+    ctx.fillText('VIGENCIA: '+duracionTxt, colL.x+colL.w/2, durTop+20);
+    noShadow(ctx);
+  }
 
   // COLUMNA DERECHA
   let ry=colR.y;
@@ -637,12 +709,17 @@ function doReset() {
   ['tipo','nivel'].forEach(id=>document.getElementById(id).selectedIndex=0);
   ['fEvento','fEmision'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('resumen').value='';
-  ['pM1','pM2','pT','pN'].forEach(id=>document.getElementById(id).checked=false);
+  ['pM1','pM2','pT','pN'].forEach(id=>document.getElementById(id).checked=true);
   document.querySelectorAll('#deptosGrid input').forEach(i=>i.checked=false);
   document.getElementById('locs').innerHTML='';
   document.getElementById('chkRec').checked=true;
+  document.getElementById('duracion').value='';
+  document.getElementById('duracionCustom').value='';
+  document.getElementById('duracionCustom').style.display='none';
   updateRecs(); render();
 }
+
+setupPeriodClicks('cnv', ['pM1','pM2','pT','pN']);
 
 document.fonts.ready.then(()=>{
   fontsReady=true;
